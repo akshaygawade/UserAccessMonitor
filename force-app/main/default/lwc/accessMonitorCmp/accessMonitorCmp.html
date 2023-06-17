@@ -1,0 +1,236 @@
+<template>
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+    </template>
+    <div>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal_large">
+            <div class="slds-modal__container modal-container">
+                <template if:true={showSpinner}>
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </template>
+
+                <header class="slds-modal__header" style="background-color:rgba(230, 230, 230);color: rgb(0, 0, 0);">
+
+                    <lightning-helptext icon-name="utility:help" content="User-Access Based on Profiles"
+                        class="slds-float_left" style="position: relative; bottom: 10px;"></lightning-helptext>
+
+                    <div class="slds-modal__title titlesize"><b>Monitor Users Permissions</b></div>
+                </header>
+                <lightning-tabset variant="scoped" active-tab-value="one">
+                    <lightning-tab label="View One" value="one">
+                        <div class="slds-modal__content slds__content" id="modal-content-id-1">
+                            <div style="background:white;overflow-y:hidden;overflow-x:hidden">
+                                <lightning-layout multiple-rows="true" class="slds-box">
+
+                                    <lightning-layout-item size="12" medium-device-size="6" large-device-size="6"
+                                        small-device-size="12">
+                                        <lightning-combobox data-id="profile" required onchange={fetchUserByProfile}
+                                            class="slds-var-p-around_medium" label="Select Profile"
+                                            options={profileOptions} value={value}
+                                            placeholder="Select Profile"></lightning-combobox>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" medium-device-size="6" large-device-size="6"
+                                        small-device-size="12">
+                                    </lightning-layout-item>
+                                    <lightning-layout-item class="slds-var-m-left_x-small">
+                                        <lightning-button data-val=false variant="Success" label="Export to excel"
+                                            title="Export to excel" onclick={exportUsersByProfiles}
+                                            class="slds-var-m-left_x-small slds-align_absolute-center"
+                                            icon-name="action:download">
+
+                                        </lightning-button>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                                <div class="slds-p-around_small">
+
+                                    <table style="width:100%;overflow-wrap: break-word;word-wrap: break-word;"
+                                        class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                        <tbody style="border: 2px solid rgba(20, 95, 133);border-radius: 5px;">
+                                            <tr>
+                                                <th colspan="4"
+                                                    class="heading slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                    style=" text-align: center;"><b>Profile : <template
+                                                            if:true={selectedProfile}>{selectedProfile}</template></b>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: center"
+                                                    class="subPerHeading slds-cell-shrink slds-cell-wrap slds-truncated">
+                                                    <b>User Name</b>
+                                                </th>
+                                                <th style="text-align: center"
+                                                    class="subPerHeading slds-cell-shrink slds-cell-wrap slds-truncated ">
+                                                    <b>Assigned Permission Sets</b>
+                                                </th>
+                                                <th style="text-align: center"
+                                                    class="subPerHeading slds-cell-shrink slds-cell-wrap slds-truncated ">
+                                                    <b>Queue MemberShip</b>
+                                                </th>
+                                                <th style="text-align: center"
+                                                    class="subPerHeading slds-cell-shrink slds-cell-wrap slds-truncated ">
+                                                    <b>Assigned Packages</b>
+                                                </th>
+                                            </tr>
+                                            <template if:true={UserReportDataRecords}>
+                                                <template for:each={UserReportDataRecords} for:item="rec">
+
+                                                    <tr key={rec.userId}>
+                                                        <td class="subHeading slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                            style=" text-align: center;"><b> {rec.userName}</b></td>
+                                                        <td class="subHeading2 slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                            style="text-align: center">
+                                                            <b> <lightning-formatted-text value={rec.permissionSets}
+                                                                    linkify></lightning-formatted-text></b>
+                                                        </td>
+                                                        <td class="subHeading3 slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                            style="text-align: center">
+                                                            <b><lightning-formatted-text value={rec.queues}
+                                                                    linkify></lightning-formatted-text></b>
+                                                        </td>
+                                                        <td class="subHeading4 slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                            style="text-align: center">
+                                                            <b><lightning-formatted-text value={rec.packages}
+                                                                    linkify></lightning-formatted-text></b>
+                                                        </td>
+                                                    </tr>
+                                                </template>
+                                            </template>
+                                            <template if:false={UserReportDataRecords}>
+                                                <tr>
+                                                    <th colspan="4"
+                                                        class="placeHolderMsg slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                        style=" text-align: center;"><b>Select Profile to See Data</b>
+                                                    </th>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </lightning-tab>
+                    <lightning-tab label="View Two" value="two">
+                        <div class="slds-modal__content slds__content" id="modal-content-id-2">
+                            <div style="background:white;overflow-y:hidden;overflow-x:hidden">
+                                <lightning-layout multiple-rows="true" class="slds-box">
+                                    <lightning-layout-item size="12" medium-device-size="6" large-device-size="3"
+                                        small-device-size="12">
+                                        <lightning-combobox data-id="profile" onchange={handleOnchange}
+                                            class="slds-var-p-around_medium" label="Select Profile"
+                                            options={profileOptions} value={profileValue}
+                                            placeholder="Select Profile"></lightning-combobox>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" medium-device-size="6" large-device-size="3"
+                                        small-device-size="12">
+                                        <lightning-combobox data-id="permissionset" onchange={handleOnchange}
+                                            class="slds-var-p-around_medium" label="Select Permission Set"
+                                            options={permissionSetOptions} value={permissionSetValue}
+                                            placeholder="Select Permission Set"></lightning-combobox>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" medium-device-size="6" large-device-size="3"
+                                        small-device-size="12">
+                                        <lightning-combobox data-id="queue" onchange={handleOnchange}
+                                            class="slds-var-p-around_medium" label="Select Queue"
+                                            options={queuesOptions} value={queueValue}
+                                            placeholder="Select Queue "></lightning-combobox>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" medium-device-size="6" large-device-size="3"
+                                        small-device-size="12">
+                                        <lightning-combobox data-id="package" onchange={handleOnchange}
+                                            class="slds-var-p-around_medium" label="Select Package"
+                                            options={packageLicenseOptions} value={packageValue}
+                                            placeholder="Select Package"></lightning-combobox>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item class="slds-var-m-left_x-small">
+                                        <lightning-button data-val=false variant="brand" label="Search Users"
+                                            title="Search Users" onclick={findUser} class="slds-var-m-left_x-small"
+                                            icon-name="utility:search">
+                                        </lightning-button>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item class="slds-var-m-left_x-small">
+                                        <lightning-button data-val=false variant="destructive" label="Clear Filters"
+                                            title="Clear Filters" onclick={clearFilter} class="slds-var-m-left_x-small"
+                                            icon-name="utility:close">
+                                        </lightning-button>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item class="slds-var-m-right_x-small">
+                                        <lightning-button data-val=false variant="Success" label="Export to excel"
+                                            title="Export to excel" onclick={exportUsersByFilters}
+                                            class="slds-var-m-left_x-small slds-align_absolute-right"
+                                            icon-name="action:download">
+
+                                        </lightning-button>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                                <div class="slds-p-around_small">
+                                    <table style="width:100%;overflow-wrap: break-word;word-wrap: break-word;"
+                                        class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                        <tbody style="border: 2px solid rgba(20, 95, 133);border-radius: 5px;">
+                                            <tr>
+                                                <th colspan="2"
+                                                    class="heading slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                    style=" text-align: center;">
+                                                    <template if:true={selectedProf}> <b>Profile :
+                                                        </b>{selectedProf}</template>
+                                                    <template if:true={selectedPS}> <b>&nbsp;&nbsp;Permission Set :
+                                                        </b>{selectedPS}</template>
+                                                    <template if:true={selectedQ}> <b>&nbsp;&nbsp;Queue :
+                                                        </b>{selectedQ}</template>
+                                                    <template if:true={selectedPackage}> <b>&nbsp;&nbsp;Package :
+                                                        </b>{selectedPackage}</template>
+                                                    <template if:true={Msg}> <b>{Msg}</b></template>
+
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th style="text-align: center"
+                                                    class="subPerHeading slds-cell-shrink slds-cell-wrap slds-truncated">
+                                                    <b>User Name</b>
+                                                </th>
+                                                <th style="text-align: center"
+                                                    class="subPerHeading slds-cell-shrink slds-cell-wrap slds-truncated ">
+                                                    <b>User Email</b>
+                                                </th>
+                                            </tr>
+                                            <template if:true={UserReportFilterRecords}>
+                                                <template for:each={UserReportFilterRecords} for:item="filterusr">
+
+                                                    <tr key={filterusr.userId}>
+                                                        <td class="subHeading slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                            style=" text-align: center;"><b> {filterusr.userName}</b>
+                                                        </td>
+                                                        <td class="subHeading2 slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                            style="text-align: center">
+                                                            <b> {filterusr.user.Email}</b>
+                                                        </td>
+
+                                                    </tr>
+                                                </template>
+                                            </template>
+                                            <template if:false={UserReportFilterRecords}>
+                                                <tr>
+                                                    <th colspan="2"
+                                                        class="placeHolderMsg slds-cell-shrink slds-cell-wrap slds-truncated"
+                                                        style=" text-align: center;"><b>Select Atleast One Picklist
+                                                            Filter</b></th>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </lightning-tab>
+                </lightning-tabset>
+                <footer class="slds-modal__footer slds-clearfix">
+
+                </footer>
+            </div>
+        </section>
+    </div>
+</template>

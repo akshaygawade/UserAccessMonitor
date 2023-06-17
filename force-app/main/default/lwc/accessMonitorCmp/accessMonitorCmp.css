@@ -1,0 +1,83 @@
+.slds__content { 
+    height: 90vh;
+    position: relative;
+    width: 100%;
+  }
+  .slds-modal__container {
+    width: 100%;
+    height: 100%;
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+  .titlesize {
+    font-size: 150% !important;
+  
+  }
+  .nav-btn-box{
+  margin-top: 20px;
+  }
+  .heading {
+    text-align: center;
+    background-color: rgb(208, 235, 248) !important;
+    color:black;
+  }
+  
+  .placeHolderMsg {
+    text-align: center;
+    background-color: rgb(233, 196, 196) !important;
+    color:black;
+  }
+  .subHeading{
+    color:black;
+    background-color: rgb(224, 224, 224) !important;
+  }
+  .subHeading2{
+    color:black;
+    background-color: rgb(214, 183, 183) !important;
+  }
+  .subHeading3{
+    color:black;
+    background-color: rgb(226, 233, 197) !important;
+  }
+  .subHeading4{
+    color:black;
+    background-color: rgb(154, 184, 240) !important;
+  }
+  .subPerHeading{
+    color:white;
+    background-color: #7b7e85 !important;
+  }
+  
+  
+  .slds-table {
+    width: 100% !important;
+    margin-top: 15px !important;
+    border: 1px solid  !important;
+    page-break-inside: avoid;
+    border-spacing: 0px;
+    border-collapse: collapse;
+  }
+  .slds-table th{
+    
+    border-radius: initial !important;
+    border-bottom: 1px solid #ced0d2 !important;
+    border-right: 1px solid #ced0d2 !important;
+    border-left: 1px solid #ced0d2 !important;
+    border: 0.5px solid;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    text-align: left;
+  }
+  .slds-table td{
+   
+    border-radius: initial !important;
+    border-bottom: 1px solid #ced0d2 !important;
+    border-right: 1px solid #ced0d2 !important;
+    border-left: 1px solid #ced0d2 !important;
+    border: 0.5px solid;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    text-align: left;
+  }
